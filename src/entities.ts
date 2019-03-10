@@ -28,7 +28,7 @@ export const showEntities = async (
         key: String(Date.now()),
         x: Math.random(),
         y: 1.2,
-        size: Math.random() + 0.5,
+        size: Math.random() * 1.5 + 0.5,
       })
     }
 
