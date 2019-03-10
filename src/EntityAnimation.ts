@@ -1,4 +1,5 @@
 import { animationFrame } from "./helpers/animationFrame"
+import { randomRange } from "./helpers/randomRange"
 
 type EntityState = {
   key: string
@@ -87,12 +88,12 @@ export class EntityAnimation {
         key: String(Date.now()),
         x: Math.random(),
         y: 1.2,
-        size: Math.random() * 1.5 + 0.5,
+        size: randomRange(0.2, 1.5),
       })
     }
 
     for (const ent of this.entities) {
-      ent.y -= ent.size * dt * 0.05
+      ent.y -= ent.size * dt * 0.08
     }
 
     this.entities = this.entities.filter((ent) => ent.y > -0.5)
@@ -109,7 +110,9 @@ export class EntityAnimation {
     )
 
     for (const part of this.entities) {
-      const size = part.size * 100
+      const size =
+        part.size * Math.min(window.innerWidth, window.innerHeight) * 0.15
+
       const x = part.x * this.overlayElement.width + -size / 2
       const y = part.y * this.overlayElement.height + -size / 2
 
