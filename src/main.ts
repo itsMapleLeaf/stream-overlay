@@ -7,9 +7,8 @@ type ImageModuleMap = {
 
 const imageModuleMap: ImageModuleMap = require("./images/*.@(png|jpg)")
 
-const isNonNil = <T extends any>(
-  value: T | undefined | null | void,
-): value is T => value != null
+const isNonNil = <T>(value: T | undefined | null | void): value is T =>
+  value != null
 
 const images = Object.values(imageModuleMap)
   .filter(isNonNil)
