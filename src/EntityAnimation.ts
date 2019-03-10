@@ -27,28 +27,30 @@ export class EntityAnimation {
 
     this.overlayElement = document.createElement("canvas")
     this.overlayElement.className = "fill-area cover-bg background-overlay"
-    this.overlayElement.width = window.innerWidth
-    this.overlayElement.height = window.innerHeight
 
     this.entityBuffer = document.createElement("canvas")
-    this.entityBuffer.width = this.overlayElement.width
-    this.entityBuffer.height = this.overlayElement.height
 
     this.container = document.createElement("div")
     this.container.className = "fullscreen fade"
     this.container.style.backgroundColor = "black"
     this.container.append(this.backgroundElement, this.overlayElement)
+
+    this.updateCanvasResolution()
   }
 
   async start() {
-    document.body.append(this.container)
-    this.isRunning = true
-
+    // run a few update cycles so we have some entities to start out with
     for (let i = 0; i < 200; i++) {
       this.update(0.1)
     }
 
+    document.body.append(this.container)
+
+    window.addEventListener("resize", this.updateCanvasResolution)
+
     let time = await animationFrame()
+    this.isRunning = true
+
     while (this.isRunning) {
       const now = await animationFrame()
       const dt = (now - time) / 1000
@@ -59,10 +61,19 @@ export class EntityAnimation {
     }
 
     this.container.remove()
+    window.removeEventListener("resize", this.updateCanvasResolution)
   }
 
   stop() {
     this.isRunning = false
+  }
+
+  private updateCanvasResolution = () => {
+    this.overlayElement.width = window.innerWidth
+    this.overlayElement.height = window.innerHeight
+
+    this.entityBuffer.width = this.overlayElement.width
+    this.entityBuffer.height = this.overlayElement.height
   }
 
   private update(dt: number) {
