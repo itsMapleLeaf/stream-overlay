@@ -39,7 +39,7 @@ const main = async () => {
 
     // preload the next image during the delay
     const [image] = await Promise.all([
-      loadImage(images[currentImageIndex + 1]),
+      loadImage(images[currentImageIndex]),
       wait(5000),
     ])
 
