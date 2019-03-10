@@ -35,28 +35,18 @@
       }
 
       #background-overlay {
-        filter: drop-shadow(0px 0px 8px black);
         clip-path: url(#backgroundOverlayClip);
       }
     </style>
 
-    <script defer src="./main.ts"></script>
+    <script defer src="./main.tsx"></script>
   </head>
   <body>
     <div class="fullscreen cover-bg" id="background-image"></div>
     <div class="fullscreen cover-bg" id="background-overlay"></div>
     <svg>
       <defs>
-        <clipPath id="backgroundOverlayClip">
-          <!-- <rect
-            id="testRect"
-            x="0"
-            y="0"
-            width="100"
-            height="100"
-            transform="translate(-50 -50) rotate(45 50 50)"
-          /> -->
-        </clipPath>
+        <clipPath id="backgroundOverlayClip"></clipPath>
       </defs>
     </svg>
   </body>
