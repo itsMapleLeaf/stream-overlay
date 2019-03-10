@@ -5,8 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>stream layout</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        background-color: black;
+      }
+
+      .fullscreen {
+        position: fixed;
+        width: 100vw;
+        height: 100vh;
+      }
+
+      #background-image {
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        opacity: 0.5;
+      }
+
+      #particles {
+        filter: drop-shadow(0px 0px 8px black);
+      }
+    </style>
+
+    <script defer src="./main.ts"></script>
   </head>
   <body>
-    <h1>hi</h1>
+    <div class="fullscreen" id="background-image"></div>
+    <canvas class="fullscreen" id="particles"></canvas>
   </body>
 </html>
