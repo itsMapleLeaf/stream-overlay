@@ -5,8 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "parcel src/index.html",
-    "build": "parcel build src/index.html",
-    "images": "node ./scripts/generate-image-list.js"
+    "build": "parcel build src/index.html"
   },
   "dependencies": {
     "@types/node": "^11.11.0",
