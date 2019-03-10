@@ -1,43 +1,34 @@
-import { EntityAnimation } from "./EntityAnimation"
+import { Application } from "pixi.js"
+import { EntityAnimation } from "./EntityAnimation.new"
 import { loadImage } from "./helpers/loadImage"
-import { wait } from "./helpers/wait"
 import { images } from "./images"
 
 const main = async () => {
+  const app = new Application()
+
+  const image = await loadImage(images[0])
+  const animation = new EntityAnimation(image)
+
+  app.stage.addChild(animation.container)
+
   // this "instanceId" logic makes it so that this loop will stop
   // when others get hot-reloaded in during development
-  const instanceId = Date.now()
-  window.currentInstanceId = instanceId
+  // const instanceId = Date.now()
+  // window.currentInstanceId = instanceId
 
-  document.body.innerHTML = ""
+  // document.body.innerHTML = ""
 
-  let currentImageIndex = 0
+  // let currentImageIndex = 0
 
-  const image = await loadImage(images[currentImageIndex])
-  let currentAnimation = new EntityAnimation(image)
-  currentAnimation.start()
+  // const image = await loadImage(images[currentImageIndex])
+  // let currentAnimation = new EntityAnimation(image)
+  // currentAnimation.start()
 
-  while (window.currentInstanceId === instanceId) {
-    currentImageIndex = (currentImageIndex + 1) % images.length
+  // while (window.currentInstanceId === instanceId) {
+  //   await wait(500)
+  // }
 
-    // preload the next image during the delay
-    const [image] = await Promise.all([
-      loadImage(images[currentImageIndex]),
-      wait(5000),
-    ])
-
-    const nextAnimation = new EntityAnimation(
-      image,
-      currentAnimation.cloneEntities(),
-    )
-    nextAnimation.start()
-
-    // let the next animation fade in fully before deleting the previous one
-    await wait(2500)
-
-    currentAnimation.stop()
-    currentAnimation = nextAnimation
-  }
+  // currentAnimation.stop()
 }
 
 main()
