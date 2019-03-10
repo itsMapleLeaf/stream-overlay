@@ -1,3 +1,3 @@
 interface Window {
-  instanceId?: number
+  currentInstanceId?: number
 }
