@@ -1,3 +1,3 @@
 interface Window {
-  currentInstanceId?: number
+  // browser globals go here if/when needed
 }

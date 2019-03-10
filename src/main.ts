@@ -5,30 +5,28 @@ import { images } from "./images"
 
 const main = async () => {
   const app = new Application()
+  app.view.className = "fullscreen"
 
-  const image = await loadImage(images[0])
-  const animation = new EntityAnimation(image)
+  const image = await loadImage(images[2])
+  const animation = new EntityAnimation(app, image)
 
-  app.stage.addChild(animation.container)
+  app.ticker.add((tickTime: number) => {
+    const dt = tickTime / 60
+    animation.update(dt)
+  })
 
-  // this "instanceId" logic makes it so that this loop will stop
-  // when others get hot-reloaded in during development
-  // const instanceId = Date.now()
-  // window.currentInstanceId = instanceId
+  const handleResize = () => {
+    app.renderer.resize(window.innerWidth, window.innerHeight)
+  }
 
-  // document.body.innerHTML = ""
+  handleResize()
+  window.addEventListener("resize", handleResize)
 
-  // let currentImageIndex = 0
-
-  // const image = await loadImage(images[currentImageIndex])
-  // let currentAnimation = new EntityAnimation(image)
-  // currentAnimation.start()
-
-  // while (window.currentInstanceId === instanceId) {
-  //   await wait(500)
-  // }
-
-  // currentAnimation.stop()
+  document.body.append(app.view)
 }
 
-main()
+main().catch(console.error)
+
+if (module.hot) {
+  module.hot.accept(() => window.location.reload())
+}
