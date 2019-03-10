@@ -1,5 +1,3 @@
-import { h, render } from "preact"
-
 type ImageModuleMap = {
   [id in string]?: {
     png?: string
@@ -28,21 +26,15 @@ const querySelectorSafe = <E extends Element>(selector: string) => {
 
 const applyBackground = () => {
   const backgroundElement = querySelectorSafe<HTMLElement>("#background-image")
-  const backgroundOverlay = querySelectorSafe<HTMLElement>(
-    "#background-overlay",
-  )
-  backgroundElement.style.backgroundImage = `url(${images[0]})`
-  backgroundOverlay.style.backgroundImage = `url(${images[0]})`
+  backgroundElement.style.backgroundImage = `url(${images[4]})`
 }
 
 const animationFrame = () => new Promise(requestAnimationFrame)
 
 const wait = (ms?: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
-declare global {
-  interface Window {
-    gameId?: number
-  }
+interface Window {
+  gameId?: number
 }
 
 let gameId = Date.now()
@@ -81,24 +73,64 @@ const showParticles = async () => {
     particles = particles.filter((part) => part.y > -0.5)
   }
 
-  const backgroundOverlayClip = querySelectorSafe("#backgroundOverlayClip")
+  const backgroundOverlay = querySelectorSafe<HTMLCanvasElement>(
+    "#background-overlay",
+  )
+  backgroundOverlay.width = window.innerWidth
+  backgroundOverlay.height = window.innerHeight
 
-  const draw = () => {
-    const svgRects = particles.map((part) => {
+  const particleBuffer = document.createElement("canvas")
+  particleBuffer.width = backgroundOverlay.width
+  particleBuffer.height = backgroundOverlay.height
+
+  const backgroundImage = new Image()
+  backgroundImage.src = images[4]
+
+  const drawParticles = () => {
+    const context = particleBuffer.getContext("2d")!
+    context.clearRect(0, 0, backgroundOverlay.width, backgroundOverlay.height)
+
+    for (const part of particles) {
       const size = part.size * 100
 
-      const transform = `
-        translate(${part.x * window.innerWidth} ${part.y * window.innerHeight})
-        rotate(45)
-      `
+      context.save()
 
-      return (
-        <rect x={0} y={0} width={size} height={size} transform={transform} />
+      context.translate(
+        part.x * backgroundOverlay.width + -size / 2,
+        part.y * backgroundOverlay.height + -size / 2,
       )
-    })
+      context.rotate(Math.PI * 0.25)
 
-    backgroundOverlayClip.innerHTML = ""
-    render(svgRects, backgroundOverlayClip)
+      context.fillStyle = "white"
+      context.fillRect(0, 0, size, size)
+
+      context.restore()
+    }
+  }
+
+  const draw = () => {
+    drawParticles()
+
+    const context = backgroundOverlay.getContext("2d")!
+    context.clearRect(0, 0, backgroundOverlay.width, backgroundOverlay.height)
+
+    context.globalCompositeOperation = "source-over"
+    context.drawImage(
+      backgroundImage,
+      0,
+      0,
+      backgroundOverlay.width,
+      backgroundOverlay.height,
+    )
+
+    context.globalCompositeOperation = "destination-in"
+    context.drawImage(
+      particleBuffer,
+      0,
+      0,
+      backgroundOverlay.width,
+      backgroundOverlay.height,
+    )
   }
 
   for (let i = 0; i < 500; i++) {

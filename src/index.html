@@ -30,13 +30,14 @@
       }
 
       #background-image {
-        opacity: 0.5;
+        opacity: 0.6;
         filter: blur(4px);
         transform: scale(1.03);
       }
 
       #background-overlay {
         clip-path: url(#backgroundOverlayClip);
+        filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.4));
       }
     </style>
 
@@ -44,11 +45,6 @@
   </head>
   <body>
     <div class="fullscreen cover-bg" id="background-image"></div>
-    <div class="fullscreen cover-bg" id="background-overlay"></div>
-    <svg>
-      <defs>
-        <clipPath id="backgroundOverlayClip"></clipPath>
-      </defs>
-    </svg>
+    <canvas class="fullscreen cover-bg" id="background-overlay"></canvas>
   </body>
 </html>
