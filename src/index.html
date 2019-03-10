@@ -23,28 +23,46 @@
         height: 100vh;
       }
 
+      .fill-area {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+      }
+
       .cover-bg {
         background-position: center;
         background-size: cover;
         background-repeat: no-repeat;
       }
 
-      #background-image {
-        opacity: 0.6;
+      .fade {
+        animation: 2s fade forwards;
+      }
+
+      .background-image {
+        opacity: 0.5;
         filter: blur(4px);
         transform: scale(1.03);
       }
 
-      #background-overlay {
+      .background-overlay {
         clip-path: url(#backgroundOverlayClip);
         filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.4));
+      }
+
+      @keyframes fade {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
       }
     </style>
 
     <script defer src="./main.ts"></script>
   </head>
-  <body>
-    <div class="fullscreen cover-bg" id="background-image"></div>
-    <canvas class="fullscreen cover-bg" id="background-overlay"></canvas>
-  </body>
+  <body></body>
 </html>

@@ -1,11 +1,12 @@
 import { animationFrame } from "./helpers/animationFrame"
-import { querySelectorSafe } from "./helpers/querySelectorSafe"
-import { images } from "./images"
 
 let instanceId = Date.now()
 window.instanceId = instanceId
 
-export const showEntities = async () => {
+export const showEntities = async (
+  backgroundImagePath: string,
+  backgroundOverlay: HTMLCanvasElement,
+) => {
   type EntityState = {
     key: string
     x: number
@@ -38,9 +39,6 @@ export const showEntities = async () => {
     entities = entities.filter((ent) => ent.y > -0.5)
   }
 
-  const backgroundOverlay = querySelectorSafe<HTMLCanvasElement>(
-    "#background-overlay",
-  )
   backgroundOverlay.width = window.innerWidth
   backgroundOverlay.height = window.innerHeight
 
@@ -49,7 +47,7 @@ export const showEntities = async () => {
   entityBuffer.height = backgroundOverlay.height
 
   const backgroundImage = new Image()
-  backgroundImage.src = images[4]
+  backgroundImage.src = backgroundImagePath
 
   const drawEntities = () => {
     const context = entityBuffer.getContext("2d")!
