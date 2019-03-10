@@ -11,7 +11,7 @@ type EntityState = {
 }
 
 export const showEntities = async (
-  backgroundImagePath: string,
+  backgroundImage: HTMLImageElement,
   backgroundOverlay: HTMLCanvasElement,
 ) => {
   backgroundOverlay.width = window.innerWidth
@@ -20,9 +20,6 @@ export const showEntities = async (
   const entityBuffer = document.createElement("canvas")
   entityBuffer.width = backgroundOverlay.width
   entityBuffer.height = backgroundOverlay.height
-
-  const backgroundImage = new Image()
-  backgroundImage.src = backgroundImagePath
 
   let entities: EntityState[] = []
   let newEntityTime = 0
