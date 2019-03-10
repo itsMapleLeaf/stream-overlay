@@ -14,14 +14,15 @@ export class EntityAnimation {
   private entityBuffer: HTMLCanvasElement
   private container: HTMLElement
 
-  private entities: EntityState[] = []
-
   private newEntityTime = 0
   private readonly newEntityPeriod = 0.4
 
   private isRunning = false
 
-  constructor(private backgroundImage: HTMLImageElement) {
+  constructor(
+    private backgroundImage: HTMLImageElement,
+    private entities: EntityState[] = [],
+  ) {
     this.backgroundElement = document.createElement("div")
     this.backgroundElement.className = "fill-area cover-bg background-image"
     this.backgroundElement.style.backgroundImage = `url(${backgroundImage.src})`
@@ -41,8 +42,10 @@ export class EntityAnimation {
 
   async start() {
     // run a few update cycles so we have some entities to start out with
-    for (let i = 0; i < 200; i++) {
-      this.update(0.1)
+    if (this.entities.length === 0) {
+      for (let i = 0; i < 200; i++) {
+        this.update(0.1)
+      }
     }
 
     document.body.append(this.container)
@@ -67,6 +70,10 @@ export class EntityAnimation {
 
   stop() {
     this.isRunning = false
+  }
+
+  cloneEntities(): EntityState[] {
+    return JSON.parse(JSON.stringify(this.entities))
   }
 
   private updateCanvasResolution = () => {

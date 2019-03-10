@@ -26,7 +26,10 @@ const main = async () => {
       wait(5000),
     ])
 
-    const nextAnimation = new EntityAnimation(image)
+    const nextAnimation = new EntityAnimation(
+      image,
+      currentAnimation.cloneEntities(),
+    )
     nextAnimation.start()
 
     // let the next animation fade in fully before deleting the previous one
