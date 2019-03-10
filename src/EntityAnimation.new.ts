@@ -1,12 +1,5 @@
 import { DropShadowFilter } from "@pixi/filter-drop-shadow"
-import {
-  Application,
-  Container,
-  filters,
-  Graphics,
-  Point,
-  Sprite,
-} from "pixi.js"
+import * as pixi from "pixi.js"
 import { randomRange } from "./helpers/randomRange"
 
 type EntityState = {
@@ -17,34 +10,34 @@ type EntityState = {
 }
 
 export class EntityAnimation {
-  private container: Container
-  private background: Sprite
-  private overlay: Sprite
-  private entityMask: Graphics
+  private container: pixi.Container
+  private background: pixi.Sprite
+  private overlay: pixi.Sprite
+  private entityMask: pixi.Graphics
 
   private newEntityTime = 0
   private readonly newEntityPeriod = 0.4
 
   constructor(
-    private app: Application,
+    private app: pixi.Application,
     private backgroundImage: HTMLImageElement,
     private entities: EntityState[] = [],
   ) {
-    this.background = Sprite.from(this.backgroundImage)
+    this.background = pixi.Sprite.from(this.backgroundImage)
     this.background.alpha = 0.5
     this.background.anchor.set(0.5, 0.5)
-    this.background.filters = [new filters.BlurFilter()]
+    this.background.filters = [new pixi.filters.BlurFilter()]
 
-    this.entityMask = new Graphics()
+    this.entityMask = new pixi.Graphics()
 
-    this.overlay = Sprite.from(this.backgroundImage)
+    this.overlay = pixi.Sprite.from(this.backgroundImage)
     this.overlay.mask = this.entityMask
     this.overlay.anchor.set(0.5, 0.5)
     this.overlay.filters = [
       new DropShadowFilter({ alpha: 0.4, blur: 4, distance: 0 }),
     ]
 
-    this.container = new Container()
+    this.container = new pixi.Container()
     this.container.addChild(this.background, this.overlay)
 
     app.stage.addChild(this.container)
@@ -116,7 +109,7 @@ export class EntityAnimation {
     const { width, height } = this.app.view
     const { width: bgWidth, height: bgHeight } = this.backgroundImage
 
-    const position = new Point(width / 2, height / 2)
+    const position = new pixi.Point(width / 2, height / 2)
     const scale = Math.max(width / bgWidth, height / bgHeight)
 
     this.background.position.copy(position)
