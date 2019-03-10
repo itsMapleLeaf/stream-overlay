@@ -3,16 +3,26 @@ import { animationFrame } from "./helpers/animationFrame"
 let instanceId = Date.now()
 window.instanceId = instanceId
 
+type EntityState = {
+  key: string
+  x: number
+  y: number
+  size: number
+}
+
 export const showEntities = async (
   backgroundImagePath: string,
   backgroundOverlay: HTMLCanvasElement,
 ) => {
-  type EntityState = {
-    key: string
-    x: number
-    y: number
-    size: number
-  }
+  backgroundOverlay.width = window.innerWidth
+  backgroundOverlay.height = window.innerHeight
+
+  const entityBuffer = document.createElement("canvas")
+  entityBuffer.width = backgroundOverlay.width
+  entityBuffer.height = backgroundOverlay.height
+
+  const backgroundImage = new Image()
+  backgroundImage.src = backgroundImagePath
 
   let entities: EntityState[] = []
   let newEntityTime = 0
@@ -38,16 +48,6 @@ export const showEntities = async (
 
     entities = entities.filter((ent) => ent.y > -0.5)
   }
-
-  backgroundOverlay.width = window.innerWidth
-  backgroundOverlay.height = window.innerHeight
-
-  const entityBuffer = document.createElement("canvas")
-  entityBuffer.width = backgroundOverlay.width
-  entityBuffer.height = backgroundOverlay.height
-
-  const backgroundImage = new Image()
-  backgroundImage.src = backgroundImagePath
 
   const drawEntities = () => {
     const context = entityBuffer.getContext("2d")!
