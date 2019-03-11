@@ -1,4 +1,5 @@
 import * as pixi from "pixi.js"
+import { Clock } from "./Clock"
 import { randomRange } from "./helpers/randomRange"
 
 type EntityState = {
@@ -12,8 +13,7 @@ export class EntityManager {
   private entities: EntityState[] = []
   entityMask = new pixi.Graphics()
 
-  private newEntityTime = 0
-  private readonly newEntityPeriod = 0.4
+  private newEntityClock = new Clock(0.4)
 
   constructor(private app: pixi.Application) {
     // run a few update cycles so we have some entities to start out with
@@ -32,10 +32,7 @@ export class EntityManager {
   private updateEntities(dt: number) {
     if (dt >= 0.5) return
 
-    this.newEntityTime -= dt
-    if (this.newEntityTime <= 0) {
-      this.newEntityTime = this.newEntityPeriod
-
+    if (this.newEntityClock.update(dt)) {
       this.entities.push({
         key: String(Date.now()),
         x: Math.random(),

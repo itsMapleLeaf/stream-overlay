@@ -4,18 +4,19 @@ import { EntityManager } from "./EntityManager"
 
 export class EntityAnimation {
   private container: pixi.Container
-  private background: pixi.Sprite
+  private backgroundSprite: pixi.Sprite
   private overlay: pixi.Sprite
+  private solidBackground: pixi.Graphics
 
   constructor(
     private app: pixi.Application,
     private backgroundImage: HTMLImageElement,
     entityManager: EntityManager,
   ) {
-    this.background = pixi.Sprite.from(this.backgroundImage)
-    this.background.alpha = 0.5
-    this.background.anchor.set(0.5, 0.5)
-    this.background.filters = [new pixi.filters.BlurFilter(3)]
+    this.backgroundSprite = pixi.Sprite.from(this.backgroundImage)
+    this.backgroundSprite.alpha = 0.5
+    this.backgroundSprite.anchor.set(0.5, 0.5)
+    this.backgroundSprite.filters = [new pixi.filters.BlurFilter(3)]
 
     this.overlay = pixi.Sprite.from(this.backgroundImage)
     this.overlay.mask = entityManager.entityMask
@@ -24,27 +25,48 @@ export class EntityAnimation {
       new DropShadowFilter({ alpha: 0.4, blur: 4, distance: 0 }),
     ]
 
+    this.solidBackground = new pixi.Graphics()
+    this.solidBackground.beginFill(0x000000, 1)
+    this.solidBackground.lineStyle(0)
+    this.solidBackground.drawRect(0, 0, app.view.width, app.view.height)
+    this.solidBackground.endFill()
+
     this.container = new pixi.Container()
-    this.container.addChild(this.background, this.overlay)
+    this.container.alpha = 0
+    this.container.addChild<pixi.DisplayObject>(
+      this.solidBackground,
+      this.backgroundSprite,
+      this.overlay,
+    )
 
     app.stage.addChild(this.container)
   }
 
   update(dt: number) {
     this.updateBackground()
+
+    this.container.alpha =
+      this.container.alpha + (1 - this.container.alpha) * dt * 2
+  }
+
+  stop() {
+    this.container.destroy()
   }
 
   private updateBackground() {
     const { width, height } = this.app.view
     const { width: bgWidth, height: bgHeight } = this.backgroundImage
 
-    const position = new pixi.Point(width / 2, height / 2)
+    const center = new pixi.Point(width / 2, height / 2)
     const scale = Math.max(width / bgWidth, height / bgHeight)
 
-    this.background.position.copy(position)
-    this.background.scale.set(scale * 1.05) // add extra scale for minor distortion effect
+    this.solidBackground.width = width
+    this.solidBackground.height = height
 
-    this.overlay.position.copy(position)
+    this.backgroundSprite.position.copy(center)
+    this.backgroundSprite.scale.set(scale * 1.05) // add extra scale for minor distortion effect
+
+    this.overlay.position.copy(center)
     this.overlay.scale.set(scale)
   }
 }
