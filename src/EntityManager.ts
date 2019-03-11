@@ -13,7 +13,7 @@ export class EntityManager {
   private entities: EntityState[] = []
   entityMask = new pixi.Graphics()
 
-  private newEntityClock = new Clock(0.4)
+  private newEntityClock = new Clock(0.6)
 
   constructor(private app: pixi.Application) {
     // run a few update cycles so we have some entities to start out with
@@ -37,7 +37,7 @@ export class EntityManager {
         key: String(Date.now()),
         x: Math.random(),
         y: 1.4,
-        size: randomRange(0.2, 1.5),
+        size: randomRange(0.7, 1.5),
       })
     }
 
