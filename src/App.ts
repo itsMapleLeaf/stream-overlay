@@ -6,7 +6,7 @@ import { wait } from "./helpers/wait"
 import { images } from "./images"
 
 export class App {
-  private app = new pixi.Application()
+  private app = new pixi.Application({ antialias: true })
   private entityManager = new EntityManager(this.app)
   private animations: EntityAnimation[] = []
   private imageIndex = 0
