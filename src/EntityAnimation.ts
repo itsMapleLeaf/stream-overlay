@@ -1,158 +1,72 @@
-import { animationFrame } from "./helpers/animationFrame"
-import { randomRange } from "./helpers/randomRange"
-
-type EntityState = {
-  key: string
-  x: number
-  y: number
-  size: number
-}
+import { DropShadowFilter } from "@pixi/filter-drop-shadow"
+import * as pixi from "pixi.js"
+import { EntityManager } from "./EntityManager"
 
 export class EntityAnimation {
-  private backgroundElement: HTMLElement
-  private overlayElement: HTMLCanvasElement
-  private entityBuffer: HTMLCanvasElement
-  private container: HTMLElement
-
-  private newEntityTime = 0
-  private readonly newEntityPeriod = 0.4
-
-  private isRunning = false
+  private container: pixi.Container
+  private backgroundSprite: pixi.Sprite
+  private overlay: pixi.Sprite
+  private solidBackground: pixi.Graphics
 
   constructor(
+    private app: pixi.Application,
     private backgroundImage: HTMLImageElement,
-    private entities: EntityState[] = [],
+    entityManager: EntityManager,
   ) {
-    this.backgroundElement = document.createElement("div")
-    this.backgroundElement.className = "fill-area cover-bg background-image"
-    this.backgroundElement.style.backgroundImage = `url(${backgroundImage.src})`
+    this.backgroundSprite = pixi.Sprite.from(this.backgroundImage)
+    this.backgroundSprite.alpha = 0.5
+    this.backgroundSprite.anchor.set(0.5, 0.5)
+    this.backgroundSprite.filters = [new pixi.filters.BlurFilter(3)]
 
-    this.overlayElement = document.createElement("canvas")
-    this.overlayElement.className = "fill-area cover-bg background-overlay"
+    this.overlay = pixi.Sprite.from(this.backgroundImage)
+    this.overlay.mask = entityManager.entityMask
+    this.overlay.anchor.set(0.5, 0.5)
+    this.overlay.filters = [
+      new DropShadowFilter({ alpha: 0.4, blur: 4, distance: 0 }),
+    ]
 
-    this.entityBuffer = document.createElement("canvas")
+    this.solidBackground = new pixi.Graphics()
+    this.solidBackground.beginFill(0x000000, 1)
+    this.solidBackground.lineStyle(0)
+    this.solidBackground.drawRect(0, 0, app.view.width, app.view.height)
+    this.solidBackground.endFill()
 
-    this.container = document.createElement("div")
-    this.container.className = "fullscreen fade"
-    this.container.style.backgroundColor = "black"
-    this.container.append(this.backgroundElement, this.overlayElement)
+    this.container = new pixi.Container()
+    this.container.alpha = 0
+    this.container.addChild<pixi.DisplayObject>(
+      this.solidBackground,
+      this.backgroundSprite,
+      this.overlay,
+    )
 
-    this.updateCanvasResolution()
+    app.stage.addChild(this.container)
   }
 
-  async start() {
-    // run a few update cycles so we have some entities to start out with
-    if (this.entities.length === 0) {
-      for (let i = 0; i < 200; i++) {
-        this.update(0.1)
-      }
-    }
+  update(dt: number) {
+    this.updateBackground()
 
-    document.body.append(this.container)
-
-    window.addEventListener("resize", this.updateCanvasResolution)
-
-    let time = await animationFrame()
-    this.isRunning = true
-
-    while (this.isRunning) {
-      const now = await animationFrame()
-      const dt = (now - time) / 1000
-      time = now
-
-      this.update(dt)
-      this.draw()
-    }
-
-    this.container.remove()
-    window.removeEventListener("resize", this.updateCanvasResolution)
+    this.container.alpha =
+      this.container.alpha + (1 - this.container.alpha) * dt * 2
   }
 
   stop() {
-    this.isRunning = false
+    this.container.destroy()
   }
 
-  cloneEntities(): EntityState[] {
-    return JSON.parse(JSON.stringify(this.entities))
-  }
+  private updateBackground() {
+    const { width, height } = this.app.view
+    const { width: bgWidth, height: bgHeight } = this.backgroundImage
 
-  private updateCanvasResolution = () => {
-    this.overlayElement.width = window.innerWidth
-    this.overlayElement.height = window.innerHeight
+    const center = new pixi.Point(width / 2, height / 2)
+    const scale = Math.max(width / bgWidth, height / bgHeight)
 
-    this.entityBuffer.width = this.overlayElement.width
-    this.entityBuffer.height = this.overlayElement.height
-  }
+    this.solidBackground.width = width
+    this.solidBackground.height = height
 
-  private update(dt: number) {
-    if (dt >= 0.5) return
+    this.backgroundSprite.position.copy(center)
+    this.backgroundSprite.scale.set(scale * 1.05) // add extra scale for minor distortion effect
 
-    this.newEntityTime -= dt
-    if (this.newEntityTime <= 0) {
-      this.newEntityTime = this.newEntityPeriod
-
-      this.entities.push({
-        key: String(Date.now()),
-        x: Math.random(),
-        y: 1.2,
-        size: randomRange(0.2, 1.5),
-      })
-    }
-
-    for (const ent of this.entities) {
-      ent.y -= ent.size * dt * 0.08
-    }
-
-    this.entities = this.entities.filter((ent) => ent.y > -0.5)
-  }
-
-  private drawEntities() {
-    const context = this.entityBuffer.getContext("2d")!
-
-    context.clearRect(
-      0,
-      0,
-      this.overlayElement.width,
-      this.overlayElement.height,
-    )
-
-    for (const part of this.entities) {
-      const size =
-        part.size * Math.min(window.innerWidth, window.innerHeight) * 0.15
-
-      const x = part.x * this.overlayElement.width + -size / 2
-      const y = part.y * this.overlayElement.height + -size / 2
-
-      context.save()
-
-      context.translate(x, y)
-      context.rotate(Math.PI * 0.25)
-
-      context.fillStyle = "white"
-      context.fillRect(0, 0, size, size)
-
-      context.restore()
-    }
-  }
-
-  private draw() {
-    this.drawEntities()
-
-    const context = this.overlayElement.getContext("2d")!
-
-    const destinationArea: [number, number, number, number] = [
-      0,
-      0,
-      this.overlayElement.width,
-      this.overlayElement.height,
-    ]
-
-    context.clearRect(...destinationArea)
-
-    context.globalCompositeOperation = "source-over"
-    context.drawImage(this.backgroundImage, ...destinationArea)
-
-    context.globalCompositeOperation = "destination-in"
-    context.drawImage(this.entityBuffer, ...destinationArea)
+    this.overlay.position.copy(center)
+    this.overlay.scale.set(scale)
   }
 }

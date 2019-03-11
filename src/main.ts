@@ -1,6 +1,6 @@
 import * as pixi from "pixi.js"
 import { Clock } from "./Clock"
-import { EntityAnimation } from "./EntityAnimation.new"
+import { EntityAnimation } from "./EntityAnimation"
 import { EntityManager } from "./EntityManager"
 import { loadImage } from "./helpers/loadImage"
 import { wait } from "./helpers/wait"
