@@ -1,5 +1,6 @@
 import { Application } from "pixi.js"
 import { EntityAnimation } from "./EntityAnimation.new"
+import { EntityManager } from "./EntityManager"
 import { loadImage } from "./helpers/loadImage"
 import { images } from "./images"
 
@@ -7,12 +8,15 @@ const main = async () => {
   const app = new Application()
   app.view.className = "fullscreen"
 
+  const entityManager = new EntityManager(app)
+
   const image = await loadImage(images[2])
-  const animation = new EntityAnimation(app, image)
+  const animation = new EntityAnimation(app, image, entityManager)
 
   app.ticker.add((tickTime: number) => {
     const dt = tickTime / 60
     animation.update(dt)
+    entityManager.update(dt)
   })
 
   const handleResize = () => {
