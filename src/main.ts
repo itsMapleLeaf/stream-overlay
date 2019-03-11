@@ -1,5 +1,4 @@
 import * as pixi from "pixi.js"
-import { Clock } from "./Clock"
 import { EntityAnimation } from "./EntityAnimation"
 import { EntityManager } from "./EntityManager"
 import { loadImage } from "./helpers/loadImage"
@@ -10,7 +9,6 @@ class App {
   private app = new pixi.Application()
   private entityManager = new EntityManager(this.app)
   private animations: EntityAnimation[] = []
-  private newAnimationClock = new Clock(8)
   private imageIndex = 0
 
   constructor() {
@@ -27,9 +25,10 @@ class App {
 
   private async addAnimation() {
     const image = await loadImage(images[this.imageIndex])
+    this.imageIndex = (this.imageIndex + 1) % images.length
+
     const animation = new EntityAnimation(this.app, image, this.entityManager)
     this.animations.push(animation)
-    this.imageIndex = (this.imageIndex + 1) % images.length
 
     await wait(2000)
 
@@ -37,6 +36,10 @@ class App {
       const prev = this.animations.shift()!
       prev.stop()
     }
+
+    await wait(8000)
+
+    this.addAnimation()
   }
 
   private handleTick = (tickTime: number) => {
@@ -46,10 +49,6 @@ class App {
 
     for (const animation of this.animations) {
       animation.update(dt)
-    }
-
-    if (this.newAnimationClock.update(dt)) {
-      this.addAnimation()
     }
   }
 

@@ -26,10 +26,10 @@ export class EntityAnimation {
     ]
 
     this.solidBackground = new pixi.Graphics()
-    this.solidBackground.beginFill(0x000000, 1)
-    this.solidBackground.lineStyle(0)
-    this.solidBackground.drawRect(0, 0, app.view.width, app.view.height)
-    this.solidBackground.endFill()
+      .beginFill(0x000000, 1)
+      .lineStyle(0)
+      .drawRect(0, 0, app.view.width, app.view.height)
+      .endFill()
 
     this.container = new pixi.Container()
     this.container.alpha = 0
@@ -46,7 +46,7 @@ export class EntityAnimation {
     this.updateBackground()
 
     this.container.alpha =
-      this.container.alpha + (1 - this.container.alpha) * dt * 2
+      this.container.alpha + (1 - this.container.alpha) * dt * 1.5
   }
 
   stop() {

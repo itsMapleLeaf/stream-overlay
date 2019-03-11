@@ -49,10 +49,7 @@ export class EntityManager {
   }
 
   private renderMask() {
-    const g = this.entityMask
-
-    g.clear()
-    g.lineStyle(0)
+    this.entityMask.clear().lineStyle(0)
 
     for (const part of this.entities) {
       const size =
@@ -61,12 +58,13 @@ export class EntityManager {
       const x = part.x * this.app.view.width + -size / 2
       const y = part.y * this.app.view.height + -size / 2
 
-      g.beginFill(0xffffff)
-      g.moveTo(x, y - size / 2)
-      g.lineTo(x + size / 2, y)
-      g.lineTo(x, y + size / 2)
-      g.lineTo(x - size / 2, y)
-      g.endFill()
+      this.entityMask
+        .beginFill(0xffffff)
+        .moveTo(x, y - size / 2)
+        .lineTo(x + size / 2, y)
+        .lineTo(x, y + size / 2)
+        .lineTo(x - size / 2, y)
+        .endFill()
     }
   }
 }
