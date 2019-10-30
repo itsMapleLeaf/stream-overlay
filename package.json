@@ -7,17 +7,13 @@
     "dev": "parcel src/index.html",
     "build": "parcel build src/index.html"
   },
-  "dependencies": {
-    "@pixi/filter-drop-shadow": "^2.7.0",
-    "pixi.js": "~4.8.6"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "@babel/core": "^7.3.4",
-    "@babel/plugin-transform-runtime": "^7.3.4",
-    "@types/node": "^11.11.0",
-    "@types/pixi.js": "^4.8.6",
-    "@types/webpack-env": "^1.13.9",
+    "@babel/core": "^7.6.4",
+    "@babel/plugin-transform-runtime": "^7.6.2",
+    "@types/node": "^12.12.3",
+    "@types/webpack-env": "^1.14.1",
     "parcel-bundler": "1.11.0",
-    "typescript": "^3.3.3333"
+    "typescript": "~3.6.4"
   }
 }
