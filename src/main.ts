@@ -71,7 +71,7 @@ function draw() {
       sinOut,
     )
 
-    const size = canvas.width * 0.1
+    const size = Math.max(canvas.width, canvas.height) * 0.08
 
     drawDiamond(x, y, size)
 
