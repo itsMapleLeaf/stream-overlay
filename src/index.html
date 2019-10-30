@@ -14,55 +14,19 @@
       }
 
       :root {
-        background-color: black;
+        background-color: rgb(60, 60, 60);
       }
 
-      .fullscreen {
+      canvas {
         position: fixed;
         width: 100vw;
         height: 100vh;
-      }
-
-      .fill-area {
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-      }
-
-      .cover-bg {
-        background-position: center;
-        background-size: cover;
-        background-repeat: no-repeat;
-      }
-
-      .fade {
-        animation: 2s fade forwards;
-      }
-
-      .background-image {
-        opacity: 0.5;
-        filter: blur(4px);
-        transform: scale(1.03);
-      }
-
-      .background-overlay {
-        clip-path: url(#backgroundOverlayClip);
-        filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.4));
-      }
-
-      @keyframes fade {
-        from {
-          opacity: 0;
-        }
-        to {
-          opacity: 1;
-        }
       }
     </style>
 
     <script defer src="./main.ts"></script>
   </head>
-  <body></body>
+  <body>
+    <canvas></canvas>
+  </body>
 </html>
