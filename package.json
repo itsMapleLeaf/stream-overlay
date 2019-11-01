@@ -4,17 +4,26 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "dev": "parcel src/index.html",
-    "build": "parcel build src/index.html --public-url ./",
-    "watch": "parcel watch src/index.html --public-url ./"
+    "dev": "webpack-dev-server",
+    "build": "webpack --mode production"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@babel/runtime": "^7.6.3"
+  },
   "devDependencies": {
     "@babel/core": "^7.6.4",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/plugin-transform-runtime": "^7.6.2",
+    "@babel/preset-env": "^7.6.3",
+    "@babel/preset-typescript": "^7.6.0",
     "@types/node": "^12.12.3",
     "@types/webpack-env": "^1.14.1",
-    "parcel-bundler": "^1.12.4",
-    "typescript": "~3.6.4"
-  }
+    "babel-loader": "^8.0.6",
+    "html-webpack-plugin": "^3.2.0",
+    "typescript": "~3.6.4",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.9.0"
+  },
+  "browserslist": "last 1 chrome version"
 }

@@ -105,7 +105,3 @@ async function main() {
 }
 
 main().catch(console.error)
-
-if (module.hot) {
-  module.hot.accept(() => window.location.reload())
-}
