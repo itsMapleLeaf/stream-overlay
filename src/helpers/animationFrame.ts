@@ -1,1 +1,2 @@
-export const animationFrame = () => new Promise(requestAnimationFrame)
+export const animationFrame = () =>
+	new Promise<number>((resolve) => requestAnimationFrame(resolve))
