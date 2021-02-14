@@ -30,7 +30,7 @@ type Sprite = {
 }
 
 const sprites = new Set<Sprite>()
-const spriteSpawnClock = new Clock(0.3)
+const spriteSpawnClock = new Clock(0.6)
 
 function fixCanvasSize() {
 	canvas.width = window.innerWidth
