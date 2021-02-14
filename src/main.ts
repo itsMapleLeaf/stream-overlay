@@ -1,5 +1,5 @@
 import { Clock } from "./Clock"
-import { gameLoop } from "./helpers/gameLoop"
+import { animationFrame } from "./helpers/animationFrame"
 import { loadImage } from "./helpers/loadImage"
 import { randomRange } from "./helpers/randomRange"
 
@@ -101,7 +101,12 @@ async function main() {
 	window.addEventListener("resize", fixCanvasSize)
 	fixCanvasSize()
 
-	for await (const delta of gameLoop()) {
+	let currentTime = await animationFrame()
+	while (true) {
+		const frameTime = await animationFrame()
+		const delta = frameTime - currentTime
+		currentTime = frameTime
+
 		runFrame(delta / 1000)
 	}
 }
